@@ -18,41 +18,44 @@ import lombok.Data;
 @Entity(name = "app_users")
 public class AppUser {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
+	private int id;
 
-    @Column(name = "RoleID")
-    private int roleId;
+	@Column(name = "RoleID")
+	private int roleId;
 
-    @Column(name = "Name")
-    private String name;
+	@Column(name = "Name")
+	private String name;
 
-    @Column(name = "Email")
-    @NotNull(message = "Email cannot be Empty")
-    private String email;
+	@Column(name = "Email")
+	@NotNull(message = "Email cannot be Empty")
+	private String email;
 
-    @Column(name = "Password")
+	@Column(name = "Password")
 //    @JsonIgnore
-    private String password;
+	private String password;
 
-    @Transient
-    private String role;
+	@Transient
+	private String role;
 
-    @Column(name = "CreatedAt")
-    @JsonIgnore
-    private Date createdAt;
+	@Column(name = "CreatedAt")
+	@JsonIgnore
+	private Date createdAt;
 
-    @Column(name = "UpdatedAt")
-    @JsonIgnore
-    private Date updatedAt;
+	@Column(name = "UpdatedAt")
+	@JsonIgnore
+	private Date updatedAt;
 
-    @Column(name = "Status")
+	@Column(name = "Status")
 //    @JsonIgnore
-    private String status;
-    
-    @Transient
-    private String token;
+	private String status;
+
+	@Transient
+	private String token;
+
+	@Column(name = "Designation")
+	private String designation;
 
 }

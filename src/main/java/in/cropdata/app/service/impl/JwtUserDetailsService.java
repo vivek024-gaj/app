@@ -34,41 +34,40 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//	Optional<User> foundAcluser = aclUserRepository.findByEmail(username.trim());
+		in.cropdata.app.dto.interfaces.User foundAppUser = appUserRepository.getUserByEmailId(username.trim());
+		AppUser appUser = null;
+		if (foundAppUser != null) {
+			appUser = new AppUser();
+			appUser.setId(foundAppUser.getId());
+			appUser.setRoleId(foundAppUser.getRoleId());
+			appUser.setName(foundAppUser.getName());
+			appUser.setRole(foundAppUser.getRole());
+			appUser.setEmail(foundAppUser.getEmail());
+			appUser.setPassword(foundAppUser.getPassword());
+			appUser.setStatus(foundAppUser.getStatus());
+			appUser.setCreatedAt(foundAppUser.getCreatedAt());
+			appUser.setUpdatedAt(foundAppUser.getUpdatedAt());
 
-		in.cropdata.app.dto.interfaces.User foundAcluser = appUserRepository.getUserByEmailId(username.trim());
-		AppUser aclUser = null;
-		if (foundAcluser != null) {
-			aclUser = new AppUser();
-			aclUser.setId(foundAcluser.getId());
-			aclUser.setRoleId(foundAcluser.getRoleId());
-			aclUser.setName(foundAcluser.getName());
-			aclUser.setRole(foundAcluser.getRole());
-			aclUser.setEmail(foundAcluser.getEmail());
-			aclUser.setPassword(foundAcluser.getPassword());
-			aclUser.setStatus(foundAcluser.getStatus());
-			aclUser.setCreatedAt(foundAcluser.getCreatedAt());
-			aclUser.setUpdatedAt(foundAcluser.getUpdatedAt());
-
-			if (!aclUser.getStatus().equals("Active")) {
+			if (!appUser.getStatus().equals("Active")) {
 				throw new InactiveUserException("User '" + username + "' is not active.");
 			}
 
 			List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 //	    System.err.println("Role: "+aclUser.getRole());
-			grantedAuthorities.add(new SimpleGrantedAuthority(aclUser.getRole()));
+			grantedAuthorities.add(new SimpleGrantedAuthority(appUser.getRole()));
 
-			User user = new User(aclUser.getEmail(), aclUser.getPassword(), grantedAuthorities);
+			User user = new User(appUser.getEmail(), appUser.getPassword(), grantedAuthorities);
 
-			List<Menu> menuList = appUserRepository.getMenusByRole(foundAcluser.getRoleId());
+			List<Menu> menuList = appUserRepository.getMenusByRole(foundAppUser.getRoleId());
 
 			Map<String, NavData> navMap = new HashMap<String, NavData>();
 			for (Menu menu : menuList) {
 				String group = menu.getResourceGroupName();
+				String icon = menu.getResourceIcon();
 				if (navMap.get(group) == null) {
 					NavData navData = new NavData();
 					navData.setName(group);
-					navData.setIcon("fa fa-indent");
+					navData.setIcon(icon);
 					if (menu.getResourceURL() != null && menu.getResourceURL().contains("/")) {
 						String[] urls = menu.getResourceURL().split(File.separator);
 						if (urls.length > 1) {
@@ -83,14 +82,14 @@ public class JwtUserDetailsService implements UserDetailsService {
 				NavData navData = new NavData();
 				navData.setName(menu.getResourceName());
 				navData.setUrl(menu.getResourceURL());
-				navData.setIcon("fa fa-indent");
+				navData.setIcon(menu.getResIcon());
 				if (navMap.get(group) != null) {
 					navMap.get(group).getChildren().add(navData);
 				}
 			} // for
 
 //	    System.err.println(navMap.entrySet());
-			return new CustomUserDetails(user, aclUser, navMap);
+			return new CustomUserDetails(user, appUser, navMap);
 
 		} else {
 			throw new UsernameNotFoundException("User not found with username: " + username);

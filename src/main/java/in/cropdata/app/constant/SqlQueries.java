@@ -25,7 +25,7 @@ public class SqlQueries {
 	 * get user by email id for authenticate user
 	 * 
 	 */
-	public static final String GET_USER_BY_EMAIL_ID = "SELECT u.ID,u.RoleID,u.Name,u.Email,u.Password,u.Status,u.CreatedAt,u.UpdatedAt,r.Name as Role FROM app_users u "
+	public static final String GET_USER_BY_EMAIL_ID = "SELECT u.ID,u.RoleID,u.Name,u.Email,u.Password,u.Status,u.CreatedAt,u.UpdatedAt,u.Designation,r.Name as Role FROM app_users u "
 			+ "INNER JOIN app_roles r ON r.ID = u.RoleID where u.Email = ?1";
 
 	/**
@@ -50,9 +50,14 @@ public class SqlQueries {
 	 * get menus for user by role id
 	 * 
 	 */
-	public static final String GET_MENUS_BY_ROLE_ID = "SELECT res.ResourceURL,res.ResourceName, resg.ResourceGroupName,rtcn.ID as RestrictedResourceID FROM app_resource as res "
-			+ "INNER JOIN app_resource_groups as resg ON resg.ID = res.ResourceGroupID LEFT JOIN app_restrictions as rtcn ON (rtcn.ResourceID = res.ID AND rtcn.RoleID = ?1) "
-			+ "WHERE res.ResourceGroupID is not NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.MenuPlacement, res.MenuPlacement";
+//	public static final String GET_MENUS_BY_ROLE_ID = "SELECT res.ResourceURL,res.ResourceName, resg.ResourceGroupName,rtcn.ID as RestrictedResourceID FROM app_resource as res "
+//			+ "INNER JOIN app_resource_groups as resg ON resg.ID = res.ResourceGroupID LEFT JOIN app_restrictions as rtcn ON (rtcn.ResourceID = res.ID AND rtcn.RoleID = ?1) "
+//			+ "WHERE res.ResourceGroupID is not NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.MenuPlacement, res.MenuPlacement";
+
+	public static final String GET_MENUS_BY_ROLE_ID = "SELECT res.ResourceURL,res.ResourceName, resg.ResourceGroupName,rtcn.ID as RestrictedResourceID,resg.Icon as ResourceIcon,res.Icon as ResIcon FROM app_resource as res "
+			+ "INNER JOIN app_resource_groups as resg ON resg.ID = res.ResourceGroupID "
+			+ "LEFT JOIN app_restrictions as rtcn ON (rtcn.ResourceID = res.ID AND rtcn.RoleID = ?1) "
+			+ "WHERE res.ResourceGroupID is not NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.ResourceGroupName asc";
 
 	/**
 	 * 

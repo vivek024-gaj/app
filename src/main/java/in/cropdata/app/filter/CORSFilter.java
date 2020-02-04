@@ -16,32 +16,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class CORSFilter implements Filter {
 
-    public CORSFilter() {
-    }
+	public CORSFilter() {
+	}
 
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+	@Override
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+			throws IOException, ServletException {
 
-	HttpServletRequest request = (HttpServletRequest) req;
-	
-	HttpServletResponse response = (HttpServletResponse) res;
-	System.err.println("AllowOrigin: "+request.getHeader("allow-origin"));
-	
-	response.setHeader("Access-Control-Allow-Origin", "*");//request.getHeader("allow-origin")
-	response.setHeader("Access-Control-Allow-Credentials", "true");
-	response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
-	response.setHeader("Access-Control-Max-Age", "3600");
-	response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, authorization, Allow-Origin, Access-Control-Allow-Origin, remember-me");
+		HttpServletRequest request = (HttpServletRequest) req;
 
-	chain.doFilter(req, res);
-    }
+		HttpServletResponse response = (HttpServletResponse) res;
+		System.err.println("AllowOrigin: " + request.getHeader("allow-origin"));
 
-    @Override
-    public void init(FilterConfig filterConfig) {
-    }
+		response.setHeader("Access-Control-Allow-Origin", "*");// request.getHeader("allow-origin")
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers",
+				"Content-Type, Accept, X-Requested-With, authorization, Allow-Origin, Access-Control-Allow-Origin, remember-me");
 
-    @Override
-    public void destroy() {
-    }
+		chain.doFilter(req, res);
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) {
+	}
+
+	@Override
+	public void destroy() {
+	}
 
 }

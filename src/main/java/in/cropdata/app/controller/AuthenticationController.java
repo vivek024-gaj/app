@@ -28,7 +28,7 @@ import in.cropdata.app.utils.JwtTokenUtil;
 
 @RestController
 @CrossOrigin("*")
-public class JwtAuthenticationController {
+public class AuthenticationController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -44,17 +44,17 @@ public class JwtAuthenticationController {
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
-		AppUser aclUser = null;
+		AppUser appUser = null;
 		Map<String, NavData> namMap = null;
 		if (userDetails instanceof CustomUserDetails) {
 			CustomUserDetails user = (CustomUserDetails) userDetails;
-			aclUser = user.getAclUser();
-			aclUser.setToken(token);
+			appUser = user.getAclUser();
+			appUser.setToken(token);
 			namMap = user.getNavMap();
 		}
 
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		dataMap.put("user", aclUser);
+		dataMap.put("user", appUser);
 		dataMap.put("nav", namMap);
 
 		return ResponseEntity.ok(dataMap);
