@@ -25,4 +25,6 @@ public interface AppResourceRepository extends JpaRepository<AppResource, Intege
 
 	@Query(value = SqlQueries.GET_ALL_SUB_RESOURCE_BY_PARENT_ID, nativeQuery = true)
 	List<AppResource> getAllSubResourceByParentId(int parentId);
+	
+	
 }

@@ -13,24 +13,28 @@ import lombok.Data;
 @Entity(name = "app_restrictions")
 public class AppRestriction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
+	private int id;
 
-    @Column(name = "RoleID")
-    private int roleId;
-    
-    @Column(name = "ResourceID")
-    private int resourceId;
+	@Column(name = "RoleID")
+	private int roleId;
 
-//    @Column(name = "GroupID")
-//    private int groupId;
+	@Column(name = "ResourceID")
+	private int resourceId;
 
-    @Transient
-    private String resourceURI;
-    
+    @Column(name = "GroupID")
+    private int resourceFormId;
+	
+
+	@Transient
+	private String resourceURI;
+
 //    @Transient
 //    private String group;
-    
+
+	@Column(name = "ResourceGroupID")
+	private int resourceGroupId;
+
 }

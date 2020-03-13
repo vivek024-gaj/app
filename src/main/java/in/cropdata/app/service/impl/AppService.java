@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import in.cropdata.app.constant.APIConstants;
+import in.cropdata.app.dto.interfaces.AppSessionI;
 import in.cropdata.app.dto.interfaces.Restriction;
 import in.cropdata.app.dto.interfaces.User;
 import in.cropdata.app.exception.DoesNotExistException;
@@ -19,12 +20,14 @@ import in.cropdata.app.model.AppResource;
 import in.cropdata.app.model.AppResourceGroup;
 import in.cropdata.app.model.AppRestriction;
 import in.cropdata.app.model.AppRole;
+import in.cropdata.app.model.AppSession;
 import in.cropdata.app.model.AppUser;
 import in.cropdata.app.repository.AppGroupRepository;
 import in.cropdata.app.repository.AppResourceGroupRepository;
 import in.cropdata.app.repository.AppResourceRepository;
 import in.cropdata.app.repository.AppRestrictionsRepository;
 import in.cropdata.app.repository.AppRoleRepository;
+import in.cropdata.app.repository.AppSessionRepositoty;
 import in.cropdata.app.repository.AppUserRepository;
 import in.cropdata.app.response.ResponseMessage;
 import in.cropdata.app.utils.ResponseMessageUtil;
@@ -57,6 +60,9 @@ public class AppService {
 
 	@Autowired
 	AppUserRepository appUserRepository;
+
+	@Autowired
+	AppSessionRepositoty appSessionRepositoty;
 
 	@Autowired
 	PasswordEncoder bcryptEncoder;
@@ -526,5 +532,14 @@ public class AppService {
 			throw e;
 		}
 	}// findGroupById
+
+	public AppSession storeSession(AppSession appSession) {
+		return this.appSessionRepositoty.save(appSession);
+	}
+
+	public boolean checkUserSession(String email, String token) {
+		return this.checkUserSession(email, token);
+
+	}
 
 }

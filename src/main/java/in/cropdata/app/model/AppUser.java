@@ -57,5 +57,8 @@ public class AppUser {
 
 	@Column(name = "Designation")
 	private String designation;
+	
+	@Transient
+	private AppSession appSession;
 
 }

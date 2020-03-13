@@ -33,6 +33,8 @@ public class AppResource {
 	private String resourceName;
 	
 	@Column(name = "ResourceGroupID")
-	private String resourceGroupId;
+	private Integer resourceGroupId;
+	
+	
 
 }

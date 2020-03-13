@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: CoreApp
+  cloud:
+    config:
+      uri: http://192.168.0.62:8098/
+      label: v1.0
+  profiles:
+    active:
+    - local

@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.cropdata.app.dto.interfaces.Restriction;
+import in.cropdata.app.dto.interfaces.User;
 import in.cropdata.app.model.AppGroup;
 import in.cropdata.app.model.AppResource;
 import in.cropdata.app.model.AppResourceGroup;
 import in.cropdata.app.model.AppRestriction;
+import in.cropdata.app.model.AppRole;
+import in.cropdata.app.model.AppUser;
 import in.cropdata.app.response.ResponseMessage;
 import in.cropdata.app.service.impl.AppService;
 
@@ -35,12 +39,12 @@ public class AdminController {
 	@Autowired
 	AppService appService;
 
-	@PostMapping("/add-group")
+	@PostMapping("/group/add")
 	public ResponseMessage addGroup(@RequestBody AppGroup appGroup) {
 		return appService.addGroup(appGroup);
 	}// addGroup
 
-	@GetMapping("/group-list")
+	@GetMapping("/group/list")
 	public List<AppGroup> getAllGroup() {
 		return appService.getAllGroup();
 	}// getAllGroup
@@ -60,22 +64,22 @@ public class AdminController {
 		return appService.findGroupById(id);
 	}// findGroupById
 
-	@PostMapping("/add-resource")
+	@PostMapping("/resource/add")
 	public ResponseMessage addResource(@RequestBody AppResource appResource) {
 		return appService.addResource(appResource);
 	}// addResource
 
-	@GetMapping("/resource-list")
+	@GetMapping("/resource/list")
 	public List<AppResource> getAllResource() {
 		return appService.getAllResource();
 	}// getAllResource
 
-	@GetMapping("/parents")
+	@GetMapping("/resource/parents")
 	public List<AppResource> getAllParentResource() {
 		return appService.getAllParentResource();
 	}// getAllParentResource
 
-	@GetMapping("/parents/{parentId}")
+	@GetMapping("/resource/parents/{parentId}")
 	public List<AppResource> getAllParentResource(@PathVariable int parentId) {
 		return appService.getAllSubResourceByParentId(parentId);
 	}// getAllResource
@@ -95,12 +99,12 @@ public class AdminController {
 		return appService.findResourceById(id);
 	}// findResourceById
 
-	@GetMapping("/list-resource-group")
+	@GetMapping("/resource-group/list")
 	public List<AppResourceGroup> getAllResourceGroup() {
 		return appService.getAllResourceGroup();
 	}// getAllResourceGroup
 
-	@PostMapping("/add-resource-group")
+	@PostMapping("/resource-group/add")
 	public ResponseMessage addResourceGroup(@RequestBody AppResourceGroup appResourceGroup) {
 		return appService.addResourceGroup(appResourceGroup);
 	}// addAllResourceGroup
@@ -121,17 +125,17 @@ public class AdminController {
 		return appService.findResourceGroupById(id);
 	}// findResourceGroupById
 
-	@PostMapping("/add-restriction")
+	@PostMapping("/restriction/add")
 	public ResponseMessage addRestriction(@RequestBody AppRestriction restriction) {
 		return appService.addRestriction(restriction);
 	}// addRestriction
 
-	@PostMapping("/add-all-restriction")
+	@PostMapping("/restriction/add-all")
 	public ResponseMessage addAllRestriction(@RequestBody List<AppRestriction> restrictionList) {
 		return appService.addAllRestrictions(restrictionList);
 	}// addRestriction
 
-	@GetMapping("/list-restriction")
+	@GetMapping("/restriction/list")
 	public List<Restriction> getAllRestriction() {
 		return appService.getAllRestriction();
 	}// getAllRestriction
@@ -155,4 +159,73 @@ public class AdminController {
 	public AppRestriction findRestrictionById(@PathVariable int id) {
 		return appService.findRestrictionById(id);
 	}// findRestrictionById
+
+	@PostMapping("/role/add")
+	public ResponseMessage addRole(@RequestBody AppRole role) {
+		return appService.addRole(role);
+	}// addRole
+
+	@GetMapping("/role/list")
+	public List<AppRole> getAllRole() {
+		List<AppRole> roleList = appService.getAllRole();
+		for (AppRole aclRole : roleList) {
+			List<Restriction> restrictionList = appService.getAllRestrictionByRoleId(aclRole.getId());
+			if (restrictionList != null) {
+				aclRole.setRestrictions(restrictionList);
+			}
+		}
+		return roleList;
+	}// getAllRole
+
+	@PutMapping("/role/{id}/update")
+	public ResponseMessage updateRoleById(@PathVariable int id, @RequestBody AppRole role) {
+		return appService.updateRoleById(id, role);
+	}// updateRoleById
+
+	@DeleteMapping("/role/{id}/delete")
+	public ResponseMessage deleteRoleById(@PathVariable int id) {
+		return appService.deleteRoleById(id);
+	}// deleteRoleById
+
+	@GetMapping("/role/{id}")
+	public AppRole findRoleById(@PathVariable int id) {
+		return appService.findRoleById(id);
+	}// findRoleById
+
+	@PostMapping("/user/add")
+	public ResponseMessage addUser(@RequestBody AppUser user) {
+		return appService.addUser(user);
+	}// addUser
+
+	@GetMapping("/user/list")
+	public List<User> getAllUser() {
+		return appService.getAllUser();
+	}// getAllUser
+
+	@PutMapping("/user/{id}/update")
+	public ResponseMessage updateUserById(@PathVariable int id, @RequestBody AppUser user) {
+		return appService.updateUserById(id, user);
+	}// updateUserById
+
+	@DeleteMapping("/user/{id}/delete")
+	public ResponseMessage deleteUserById(@PathVariable int id) {
+		return appService.deleteUserById(id);
+	}// deleteUserById
+
+	@GetMapping("/user/{id}") // edit by admin
+	public User findUserById(@PathVariable int id) {
+		return appService.findUserById(id);
+	}// findUserById
+
+//	@PutMapping("/{id}/user/changePassword")
+//	public ResponseMessage updatePassword(@RequestParam String oldPassword, @PathVariable int id,
+//			@RequestParam String password) {
+//		return appService.updatePassword(oldPassword, password, id);
+//	}// updatePassword
+
+//	@PostMapping("/{id}/user/forgetPassword")
+//	public ResponseMessage forgetPassword(@RequestParam String email) {
+//		return appService.forgetPassword(email);
+//	}// forgetPassword
+
 }
