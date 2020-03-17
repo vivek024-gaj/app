@@ -25,4 +25,8 @@ public interface Restriction {
 	public String getSubResourceURL();
 
 	public String getSubResources();
+	
+	public String getResourceIcon();
+	
+	public String getResIcon();
 }

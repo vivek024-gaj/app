@@ -63,7 +63,8 @@ public class SqlQueries {
 //			+ "LEFT JOIN app_restrictions as rtcn ON (rtcn.ResourceID = res.ID OR rtcn.ResourceGroupID = resg.ID or res.ID = rtcn.GroupID AND rtcn.RoleID = ?1)\n"
 //			+ "WHERE res.ResourceGroupID is not NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.ResourceGroupName asc;";
 
-	public static final String GET_MENUS_BY_ROLE_ID = "SELECT res.ResourceURL,res.ResourceName,resg.ResourceGroupName,rtcn.ID AS RestrictedResourceID FROM  "
+	public static final String GET_MENUS_BY_ROLE_ID = "SELECT res.ResourceURL,res.ResourceName,resg.ResourceGroupName,rtcn.ID AS RestrictedResourceID, "
+			+ "    resg.Icon as ResourceIcon,res.Icon as ResIcon FROM  "
 			+ "    app_resource AS res INNER JOIN app_resource_groups AS resg ON resg.ID = res.ResourceGroupID LEFT JOIN  "
 			+ "    app_restrictions AS rtcn ON (rtcn.ResourceID = res.ID OR rtcn.ResourceGroupID = resg.ID OR rtcn.SubResourceID = res.ID)  "
 			+ "    AND (rtcn.RoleID = ?1) WHERE res.ResourceGroupID IS NOT NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.ResourceGroupName ASC";
