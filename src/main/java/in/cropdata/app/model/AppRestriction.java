@@ -22,17 +22,13 @@ public class AppRestriction {
 	private int roleId;
 
 	@Column(name = "ResourceID")
-	private int resourceId;
+	private int subResourceGroupId;
 
-    @Column(name = "GroupID")
-    private int resourceFormId;
-	
+	@Column(name = "SubResourceID")
+	private int resourceId;
 
 	@Transient
 	private String resourceURI;
-
-//    @Transient
-//    private String group;
 
 	@Column(name = "ResourceGroupID")
 	private int resourceGroupId;

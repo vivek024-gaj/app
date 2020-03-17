@@ -58,10 +58,15 @@ public class SqlQueries {
 //			+ "INNER JOIN app_resource_groups as resg ON resg.ID = res.ResourceGroupID "
 //			+ "LEFT JOIN app_restrictions as rtcn ON (rtcn.ResourceID = res.ID AND rtcn.RoleID = ?1) "
 //			+ "WHERE res.ResourceGroupID is not NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.ResourceGroupName asc";
-	public static final String GET_MENUS_BY_ROLE_ID = "SELECT res.ResourceURL,res.ResourceName, resg.ResourceGroupName,rtcn.ID as RestrictedResourceID,resg.Icon as ResourceIcon,res.Icon as ResIcon\n"
-			+ "FROM app_resource as res\n" + "INNER JOIN app_resource_groups as resg ON resg.ID = res.ResourceGroupID\n"
-			+ "LEFT JOIN app_restrictions as rtcn ON (rtcn.ResourceID = res.ID OR rtcn.ResourceGroupID = resg.ID or res.ID = rtcn.GroupID AND rtcn.RoleID = ?1)\n"
-			+ "WHERE res.ResourceGroupID is not NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.ResourceGroupName asc;";
+//	public static final String GET_MENUS_BY_ROLE_ID = "SELECT res.ResourceURL,res.ResourceName, resg.ResourceGroupName,rtcn.ID as RestrictedResourceID,resg.Icon as ResourceIcon,res.Icon as ResIcon\n"
+//			+ "FROM app_resource as res\n" + "INNER JOIN app_resource_groups as resg ON resg.ID = res.ResourceGroupID\n"
+//			+ "LEFT JOIN app_restrictions as rtcn ON (rtcn.ResourceID = res.ID OR rtcn.ResourceGroupID = resg.ID or res.ID = rtcn.GroupID AND rtcn.RoleID = ?1)\n"
+//			+ "WHERE res.ResourceGroupID is not NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.ResourceGroupName asc;";
+
+	public static final String GET_MENUS_BY_ROLE_ID = "SELECT res.ResourceURL,res.ResourceName,resg.ResourceGroupName,rtcn.ID AS RestrictedResourceID FROM  "
+			+ "    app_resource AS res INNER JOIN app_resource_groups AS resg ON resg.ID = res.ResourceGroupID LEFT JOIN  "
+			+ "    app_restrictions AS rtcn ON (rtcn.ResourceID = res.ID OR rtcn.ResourceGroupID = resg.ID OR rtcn.SubResourceID = res.ID)  "
+			+ "    AND (rtcn.RoleID = ?1) WHERE res.ResourceGroupID IS NOT NULL HAVING RestrictedResourceID IS NULL ORDER BY resg.ResourceGroupName ASC";
 
 	/**
 	 * 
@@ -96,12 +101,14 @@ public class SqlQueries {
 //			+ "LEFT JOIN app_roles ON (app_roles.ID = app_restrictions.RoleID)  LEFT JOIN app_resource ON (app_resource.ID = app_restrictions.ResourceID)  "
 //			+ "LEFT JOIN app_groups ON (app_groups.ID = app_restrictions.GroupID) where app_restrictions.RoleID =?1";
 
-	public static final String GET_DATA_BY_ROLE_ID = "SELECT app_restrictions.ID,app_restrictions.RoleID,app_restrictions.ResourceID,app_restrictions.GroupID,  "
-			+ "app_roles.Name as RoleName,app_resource.ResourceName as ParentResource,app_resource.ResourceURL,app_groups.Name as GroupName, "
-			+ "rg.ResourceGroupName,r.ResourceName,app_restrictions.ResourceGroupID " + "FROM app_restrictions   "
-			+ "LEFT JOIN app_roles ON (app_roles.ID = app_restrictions.RoleID)   "
-			+ "LEFT JOIN app_resource ON (app_resource.ID = app_restrictions.ResourceID)   "
-			+ "LEFT JOIN app_groups ON (app_groups.ID = app_restrictions.GroupID) "
-			+ "left join app_resource_groups rg on rg.ID = app_restrictions.ResourceGroupID "
-			+ "left join app_resource r on r.ID = app_restrictions.GroupID " + "where app_restrictions.RoleID =?1";
+	public static final String GET_DATA_BY_ROLE_ID = "SELECT app_restrictions.ID,app_restrictions.RoleID,app_restrictions.ResourceID,app_restrictions.GroupID, \n"
+			+ "app_roles.Name as RoleName,app_resource.ResourceName,app_resource.ResourceURL, \n"
+			+ "app_groups.Name as GroupName,resgrp.ResourceGroupName,res.ResourceName as SubResources,res.ResourceURL as SubResourceURL \n"
+			+ ",app_restrictions.ResourceGroupID,app_restrictions.SubResourceID  FROM app_restrictions \n"
+			+ "LEFT JOIN app_roles ON (app_roles.ID = app_restrictions.RoleID) \n"
+			+ "LEFT JOIN app_resource ON (app_resource.ID = app_restrictions.ResourceID) \n"
+			+ "LEFT JOIN app_groups ON (app_groups.ID = app_restrictions.GroupID) \n"
+			+ "left join app_resource_groups resgrp on resgrp.ID = app_restrictions.ResourceGroupID \n"
+			+ "left join app_resource res on res.ID = app_restrictions.SubResourceID \n"
+			+ "where app_restrictions.RoleID = ?1";
 }
